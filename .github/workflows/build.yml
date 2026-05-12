@@ -1,0 +1,46 @@
+name: Build  
+  
+on:  
+  push:  
+    branches: [ 1.21.1-test ]  
+  pull_request:  
+    branches: [ 1.21.1-test ]  
+  workflow_dispatch:  
+  
+jobs:  
+  build:  
+    runs-on: ubuntu-latest  
+      
+    steps:  
+      - name: Checkout repository  
+        uses: actions/checkout@v4  
+          
+      - name: Set up JDK 21  
+        uses: actions/setup-java@v4  
+        with:  
+          java-version: '21'  
+          distribution: 'temurin'  
+            
+      - name: Grant execute permission for gradlew  
+        run: chmod +x gradlew  
+          
+      - name: Build with Gradle  
+        run: ./gradlew build --no-daemon  
+          
+      - name: Upload Fabric artifacts  
+        uses: actions/upload-artifact@v4  
+        with:  
+          name: fabric-jars  
+          path: Fabric/build/libs/*.jar  
+            
+      - name: Upload Forge artifacts  
+        uses: actions/upload-artifact@v4  
+        with:  
+          name: forge-jars  
+          path: Forge/build/libs/*.jar  
+            
+      - name: Upload NeoForge artifacts  
+        uses: actions/upload-artifact@v4  
+        with:  
+          name: neoforge-jars  
+          path: NeoForge/build/libs/*.jar

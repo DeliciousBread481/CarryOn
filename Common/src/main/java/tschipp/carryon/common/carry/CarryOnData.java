@@ -77,24 +77,22 @@ public class CarryOnData {
 
     public CarryOnData(CompoundTag data)
     {
-        if(data.contains("type"))
-            this.type = CarryType.valueOf(data.getString("type"));
+        this.nbt = data != null ? data : new CompoundTag();
+
+        if(this.nbt.contains("type"))
+            this.type = CarryType.valueOf(this.nbt.getStringOr("type", "INVALID"));
         else
             this.type = CarryType.INVALID;
 
-        this.nbt = data;
+        this.keyPressed = this.nbt.getBooleanOr("keyPressed", false);
 
-        if(data.contains("keyPressed"))
-            this.keyPressed = data.getBoolean("keyPressed");
-
-        if(data.contains("activeScript"))
+        if(this.nbt.contains("activeScript"))
         {
-            DataResult<CarryOnScript> res = CarryOnScript.CODEC.parse(NbtOps.INSTANCE, data.get("activeScript"));
+            DataResult<CarryOnScript> res = CarryOnScript.CODEC.parse(NbtOps.INSTANCE, this.nbt.get("activeScript"));
             this.activeScript = res.getOrThrow((s) -> {throw new RuntimeException("Failed to decode activeScript during CarryOnData serialization: " + s);});
         }
 
-        if(data.contains("selected"))
-            this.selectedSlot = data.getInt("selected");
+        this.selectedSlot = this.nbt.getIntOr("selected", 0);
 
     }
 
