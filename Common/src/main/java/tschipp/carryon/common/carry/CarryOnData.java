@@ -80,11 +80,11 @@ public class CarryOnData {
         this.nbt = data != null ? data : new CompoundTag();
 
         if(this.nbt.contains("type"))
-            this.type = CarryType.valueOf(this.nbt.getStringOr("type", "INVALID"));
+            this.type = CarryType.valueOf(this.nbt.getString("type"));
         else
             this.type = CarryType.INVALID;
 
-        this.keyPressed = this.nbt.getBooleanOr("keyPressed", false);
+        this.keyPressed = this.nbt.contains("keyPressed") ? this.nbt.getBoolean("keyPressed") : false;
 
         if(this.nbt.contains("activeScript"))
         {
@@ -92,7 +92,7 @@ public class CarryOnData {
             this.activeScript = res.getOrThrow((s) -> {throw new RuntimeException("Failed to decode activeScript during CarryOnData serialization: " + s);});
         }
 
-        this.selectedSlot = this.nbt.getIntOr("selected", 0);
+        this.selectedSlot = this.nbt.contains("selected") ? this.nbt.getInt("selected") : 0;
 
     }
 
